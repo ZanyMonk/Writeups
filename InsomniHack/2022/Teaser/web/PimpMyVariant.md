@@ -83,7 +83,7 @@ That enables us to forge any JWT we like, and therefore we can bypass `/log` acc
 ```
 
 ```sh
-$ jwt_tool.py -b 'eyJhbGciOiJIUzI1N...J9cjKrLRfXl3P6OhHtI8' \
+$ jwt_tool -b 'eyJhbGciOiJIUzI1N...J9cjKrLRfXl3P6OhHtI8' \
 -p 54b163783c46881f1fe7ee05f90334aa -S hs256 \
 -I -pc settings \
    -pv 'a:1:{i:0;O:4:"User":3:{s:4:"name";s:4:"Anon";s:7:"isAdmin";b:1;s:2:"id";s:40:"18ece0c0b1d80ce692437fb40d52b667dab4035b";}}'
@@ -155,9 +155,9 @@ class UpdateLogViewer
 };
 ```
 
-That is the ideal gadget to execute arbitrary system commands on the remote server.
+That is the ideal gadget to execute arbitrary system commands on the remote server by forging a new JWT with a specially crafted `settings` property containing not only an admin `User` instance, but also an `UpdateLogViewer` instance.
 
-By forging a new JWT with a specially crafted `settings` property containing not only an admin `User` instance, but also an `UpdateLogViewer` instance. Once `settings` array gets unserialized, the classes it contains are instanciated using `__wakeup()` method (`__construct()` is **not** executed during unserialization).
+Once `settings` array gets unserialized, the classes it contains are instanciated, using `__wakeup()` method (`__construct()` is **not** executed during unserialization).
 
 In our case, it replaces the current `$singleton` with our instance, that's perfect ! Thanks developer !
 
